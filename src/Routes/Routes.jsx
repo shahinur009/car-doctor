@@ -3,23 +3,37 @@ import Main from "../Layout/Main";
 import Home from "../Pages/Home/Home/Home";
 import Login from "../Pages/Login/Login";
 import Signup from "../Pages/SIgnup/Signup";
+import BookService from "../Pages/BookService/BookService";
+import Booking from "../Pages/Booking/Booking";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Main></Main>,
-        children:[
+        children: [
             {
                 path: '/',
-                element: <Home/>
+                element: <Home />
             },
             {
-                path:'login',
-                element: <Login/>
+                path: 'login',
+                element: <Login />
             },
             {
                 path: 'signup',
-                element: <Signup/>
+                element: <Signup />
+            },
+            {
+                path: 'book/:id',
+                element: <BookService />,
+                loader: ({ params }) => fetch(`http://localhost:5000/services/${params.id}`)
+            },
+            {
+                path: 'booking',
+                element: <PrivateRoute>
+                    <Booking></Booking>
+                </PrivateRoute>
             }
         ]
     },

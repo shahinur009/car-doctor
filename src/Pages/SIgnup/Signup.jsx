@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from '../../assets/images/login/login.svg'
 import { AuthContext } from "../../Provider/AuthProvider";
 import { useContext } from "react";
+import Swal from "sweetalert2";
 
 const Signup = () => {
-    const { createUser } =useContext(AuthContext) 
+    const { createUser } = useContext(AuthContext)
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const handleSignUp = (e) => {
         e.preventDefault();
@@ -16,11 +19,19 @@ const Signup = () => {
         console.log(user)
 
         createUser(email, password)
-        .then(result =>{
-            const user = result.user;
-            console.log(user)
-        })
-        .catch(error =>console.error(error))
+            .then(result => {
+                const user = result.user;
+                console.log(user)
+                Swal.fire({
+                    position: "top-center",
+                    icon: "success",
+                    title: "Sign Up Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                
+            })
+            .catch(error => console.error(error))
     }
     return (
         <>
@@ -49,9 +60,9 @@ const Signup = () => {
                                         <a rel="noopener noreferrer" href="#">Forgot Password?</a>
                                     </div>
                                 </div>
-                                <input className='btn btn-primary w-1/2 items-center' type='submit' value='Signup'></input>
+                                <input className='btn btn-primary w-1/2 items-center' type='submit' value='Sign up'></input>
                                 <p className="text-xs text-center sm:px-6 dark:text-gray-600">Do not have an account?
-                                    <Link to='signin' rel="noopener noreferrer" href="#" className="underline dark:text-gray-800">Sign In</Link>
+                                    <Link to='/login' rel="noopener noreferrer" href="#" className="underline dark:text-gray-800">Sign In</Link>
                                 </p>
                             </form>
                         </div>
