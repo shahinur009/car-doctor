@@ -16,12 +16,13 @@ const Signup = () => {
         const email = form.email.value;
         const password = form.password.value;
         const user = { name, email, password }
-        console.log(user)
+        // console.log(user)
 
         createUser(email, password)
             .then(result => {
                 const user = result.user;
-                console.log(user)
+                navigate(location?.state ? location?.state: '/')
+                // console.log(user)
                 Swal.fire({
                     position: "top-center",
                     icon: "success",

@@ -1,4 +1,3 @@
-import Swal from "sweetalert2";
 
 const BookingRow = ({ bookService, handleDelete, handleBookingConfirm }) => {
     const { amount, _id, customerName, status, date, service, img } = bookService;

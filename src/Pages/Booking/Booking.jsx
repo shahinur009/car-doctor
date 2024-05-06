@@ -1,33 +1,38 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../Provider/AuthProvider";
+import { useEffect, useState } from "react";
+// import { AuthContext } from "../../Provider/AuthProvider";
 import BookingRow from "./BookingRow";
-import axios from "axios";
+// import axios from "axios";
+import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Booking = () => {
-
-    const { user } = useContext(AuthContext)
+    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure()
+    // const { user } = useContext(AuthContext)
     const [booking, setBooking] = useState([]);
 
-    const url = (`http://localhost:5000/booking?email=${user?.email}`)
+    const url = (`/booking?email=${user?.email}`)
     useEffect(() => {
-        axios.get(url , {withCredentials: true})
-        .then(res=> {
-            setBooking(res.data)
-        })
-        // fetch(url)
+        // axios.get(url, { credentials: 'include' })
+        //     .then(res => {
+        //         setBooking(res.data)
+        //     })
+        // fetch(url, { credentials: 'include' })
         //     .then(res => res.json())
         //     .then(data => setBooking(data))
-    }, [url])
+        axiosSecure.get(url)
+        .then(res => setBooking(res.data))
+    }, [url, axiosSecure])
 
     const handleDelete = id => {
         const proceed = confirm('Are You sure want to delete')
         if (proceed) {
-            fetch(`http://localhost:5000/booking/${id}`, {
+            fetch(`https://car-doctor-server-beryl-seven.vercel.app/booking/${id}`, {
                 method: 'DELETE'
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data)
+                    // console.log(data)
                     if (data.deletedCount > 0) {
                         alert('delete successfully')
                         const remaining = booking.filter(bookService => bookService._id !== id);
@@ -40,20 +45,20 @@ const Booking = () => {
     }
 
     const handleBookingConfirm = id => {
-        fetch(`http://localhost:5000/booking/${id}`,{
+        fetch(`https://car-doctor-server-beryl-seven.vercel.app/booking/${id}`, {
             method: 'PATCH',
-            headers:{
+            headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify({status: 'confirm'})
+            body: JSON.stringify({ status: 'confirm' })
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                // console.log(data)
                 if (data.modifiedCount > 0) {
                     // updated state
-                    const remaining = booking.filter(booking => booking._id !==id);
-                    const updated = booking.find(booking=>booking._id ===id)
+                    const remaining = booking.filter(booking => booking._id !== id);
+                    const updated = booking.find(booking => booking._id === id)
                     updated.status = 'confirm'
                     const newBooking = [updated, ...remaining];
                     setBooking(newBooking)
